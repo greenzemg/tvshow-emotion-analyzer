@@ -1,0 +1,20 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Data & Media
+data/input/*
+data/output/*
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# IDE & System
+.vscode/
+.idea/
+*.swp
+.DS_Store
