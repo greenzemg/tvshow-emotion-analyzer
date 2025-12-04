@@ -5,16 +5,18 @@ __pycache__/
 venv/
 .env
 
-# Data & Media
-data/input/*
-data/output/*
-*.mp4
-*.avi
-*.mov
-*.mkv
+# Data & Media: Uncomment to avoid uploading 500 videos 
+# data/input/*
+# data/output/*
 
 # IDE & System
 .vscode/
 .idea/
 *.swp
 .DS_Store
+
+# Personal  
+docs/PLAN.md
+docs/ACTIVITIES.md
+docs/MANUAL.md
+docs/CHANGELOG.md

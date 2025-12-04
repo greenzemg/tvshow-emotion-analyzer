@@ -1,0 +1,11 @@
+# Data and CLI
+pandas
+tqdm
+pydantic
+
+# AI modules 
+# Lighter version of OpenCV (No imshow, etc)
+opencv-python-headless
+deepface
+tf-keras 
+tensorflow
