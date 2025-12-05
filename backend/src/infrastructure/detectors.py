@@ -1,19 +1,10 @@
 from typing import Any, Dict
-from abc import ABC, abstractmethod
 from deepface import DeepFace
 
+from backend.src.domain.interfaces import IEmotionDetector
 from backend.src.infrastructure.logger import setup_logger
 
 logger = setup_logger("core.detectors.py")
-
-
-class IEmotionDetector(ABC):
-    """Abstract interface for emotion detectors."""
-
-    @abstractmethod
-    def detect(self, frame: Any) -> Dict[str, Any]:
-        """Analyzes a single frame and returns detected emotions."""
-        pass
 
 
 class DeepFaceEmotionDetector(IEmotionDetector):

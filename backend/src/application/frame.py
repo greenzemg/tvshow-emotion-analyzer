@@ -1,9 +1,9 @@
 import os
 import numpy as np
 
-from backend.src.core.detectors import DeepFaceEmotionDetector
+from backend.src.infrastructure.detectors import DeepFaceEmotionDetector
 from backend.src.infrastructure.logger import setup_logger
-from backend.src.model.output_data import OutputData
+from backend.src.domain.models import OutputData
 
 # Configure local logger
 logger = setup_logger("core.frame.py")
@@ -63,6 +63,10 @@ class Frame:
                 os.path.basename(source_name) if self.image_path else self.source_id
             )
             results = self.emotion_detector.detect(target)
+
+            if results is None:
+                logger.warning(f"No face detected in frame: {source_name}")
+                return None
 
             output_data = OutputData(
                 file_name=file_name,

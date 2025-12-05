@@ -2,52 +2,22 @@ import argparse
 import sys
 import os
 
-from backend.src.core.analyzer import EmotionAnalyzer
+from backend.src.application.analyzer import EmotionAnalyzer
 from backend.src.infrastructure.logger import setup_logger
-from backend.src.model.Input_data import InputData
-from backend.src.core.detectors import DeepFaceEmotionDetector
+from backend.src.domain.models import InputData
+from backend.src.infrastructure.detectors import DeepFaceEmotionDetector
 from backend.src.infrastructure.storage import CSVStorage
+from backend.src.infrastructure.opencv_adapter import OpenCVVideoFactory
 
 # TODO: Change the hard-coded name to dynamic if possible
 logger = setup_logger("cli.py")
 
-
 def parse_arguments():
-    parser = argparse.ArgumentParser(
-        description="Emotion Recognition Tool for Talk Show Analysis"
-    )
-
-    parser.add_argument(
-        "-i",
-        "--input",
-        type=str,
-        required=True,
-        help="Path to the input folder containing videos",
-    )
-
-    parser.add_argument(
-        "-o",
-        "--output",
-        type=str,
-        default="./data/output",
-        help="Path to save the output CSV/Excel files",
-    ) 
-
-    # TODO: Add command option for specifying the interval analyzing frames
-    parser.add_argument(
-        '--interval', 
-        type=int, 
-        default=1, 
-        help="Analysis interval in seconds (default: Analyze 1 frame every second)"
-    )
-
-    parser.add_argument(
-        "-m",
-        "--image_path", 
-        type=str,
-        default="./data/input/img11.jpg",
-        help="Path to the input image file",
-    )
+    parser = argparse.ArgumentParser(description="Emotion Recognition Tool for Talk Show Analysis")
+    parser.add_argument('-i', '--image', type=str, help="Path to a single image file")
+    parser.add_argument('-v', '--video', type=str, help="Path to a video file or folder")
+    parser.add_argument('-o', '--output', type=str, default='./data/output', help="Path to save analysis results")
+    parser.add_argument('--interval', type=int, default=1, help="Analysis interval in seconds (default: Analyze 1 frame every second)")
     return parser.parse_args()
 
 
@@ -56,20 +26,27 @@ def main():
 
     logger.info("Initializing Application...")
 
-    # Select detector and storage implementations
+    # 1. Dependency Injection: Create Implementation instances (detector, storage, video factory)
     detector = DeepFaceEmotionDetector()
     storage = CSVStorage(output_path=args.output)
+    video_factory = OpenCVVideoFactory()
 
-    # Wrap arguments in InputData dataclass
+    # 2. Wrap arguments in InputData dataclass
     input_data = InputData(
-        image_path=args.image_path,
-        video_path=args.input,
+        image_path=args.image,
+        video_path=args.video,
         output_path=args.output,
-        interval=args.interval
+        interval=args.interval,
     )
 
-    # Initialize the main emotion analyzer
-    analyzer = EmotionAnalyzer(input_data, detector=detector, storage=storage)
+    if not input_data.image_path and not input_data.video_path:
+        logger.error("You must provide either --image or --video input.")
+        return
+    
+    # 3. Initialize the main emotion analyzer with all dependencies
+    analyzer = EmotionAnalyzer(input_data, detector=detector, storage=storage, video_factory=video_factory)
+
+    # 4. Run 
     analyzer.run()
 
 
