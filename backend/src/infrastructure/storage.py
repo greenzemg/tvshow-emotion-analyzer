@@ -1,21 +1,12 @@
-from abc import ABC, abstractmethod
-from typing import Any, Dict, List
+from typing import Dict, List
 import csv
 import os
 
 from backend.src.infrastructure.logger import setup_logger
-from backend.src.model.output_data import OutputData
+from backend.src.domain.models import OutputData
+from backend.src.domain.interfaces import IStorage
 
-logger = setup_logger("infrastructure.storage.py")
-
-
-class IStorage(ABC):
-    """Abstract interface for data storage."""
-
-    @abstractmethod
-    def save(self, data: OutputData) -> None:
-        """Saves analysis data to storage."""
-        pass
+logger = setup_logger("CSVStorage")
 
 
 class CSVStorage(IStorage):
@@ -24,26 +15,23 @@ class CSVStorage(IStorage):
     def __init__(self, output_path: str):
         """Initializes storage with output directory."""
         self.output_path = output_path
-        os.makedirs(self.output_path, exist_ok=True)
+        
+        # Check if directory exists
+        if not os.path.exists(self.output_path):
+            os.makedirs(self.output_path, exist_ok=True)
+            
         self.csv_path = os.path.join(self.output_path, "analysis_results.csv")
 
         self.fieldnames = [
-            "file_name",
-            "timestamp",
-            "dominant_emotion",
-            "angry",
-            "disgust",
-            "fear",
-            "happy",
-            "sad",
-            "surprise",
-            "neutral",
+            'file_name', 'timestamp', 'dominant_emotion', 
+            'angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'
         ]
 
     def save(self, data: OutputData):
         """Appends a single analysis result to the CSV."""
         csv_row = {
             "file_name": data.file_name,
+            "timestamp": data.timestamp,
             "dominant_emotion": data.dominant_emotion,
             "angry": data.emotion.get("angry", 0),
             "disgust": data.emotion.get("disgust", 0),
