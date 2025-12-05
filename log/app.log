@@ -1,0 +1,6 @@
+2025-12-04 20:28:05,511 - [cli.py] - INFO - Initializing Application...
+2025-12-04 20:28:05,511 - [core.analyzer.py] - INFO - Starting analysis on ./data/input/MarkRutte
+2025-12-04 20:28:05,511 - [core.analyzer.py] - INFO - Analyzing single image: ./data/input/img11.jpg
+2025-12-04 20:28:29,390 - [cli.py] - INFO - Initializing Application...
+2025-12-04 20:28:29,390 - [core.analyzer.py] - INFO - Starting analysis on ./data/input/MarkRutte
+2025-12-04 20:28:29,390 - [core.analyzer.py] - INFO - Analyzing single image: ./data/input/img11.jpg
