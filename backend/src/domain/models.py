@@ -11,7 +11,7 @@ class InputData:
     image_path: Optional[str] = None
     video_path: Optional[str] = None
     output_path: str = "./data/output"
-    interval: int = 1
+    interval: float = 1.0 # Process one frame seconsds
 
 
 @dataclass
@@ -24,3 +24,13 @@ class OutputData:
     dominant_emotion: str
     emotion: Dict[str, float]
     timestamp: str = "00:00"  # timestamp field to handle video timeline
+
+@dataclass
+class VideoStats:
+    """
+    Data class for statistical summary of a single video.
+    """
+    file_name: str
+    total_frames: int
+    most_frequent_emotion: str
+    emotion_distribution: Dict[str, float] # e.g., {'happy': 40.0, 'sad': 10.0}
