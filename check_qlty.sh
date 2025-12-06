@@ -43,5 +43,13 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# 5. Run Pytest (Unit Tests)
+echo -e "\n${GREEN}[5/5] Running Pytest (Unit Tests)...${NC}"
+python -m pytest backend/tests
+if [ $? -ne 0 ]; then
+    echo -e "${RED} Tests failed. Please fix the bugs.${NC}"
+    exit 1
+fi
+
 echo -e "\n${GREEN} SUCCESS! All checks passed. You are ready to commit.${NC}"
 exit 0
