@@ -39,6 +39,7 @@ class EmotionAnalyzer:
         """Executes the analysis workflow for images or videos."""
         logger.info(f"Starting analysis on {self.input_data.video_path}")
 
+        
         try:
             if self.input_data.image_path:
                 self._process_image(self.input_data.image_path) 
@@ -53,6 +54,7 @@ class EmotionAnalyzer:
         except Exception as e:
             logger.error(f"Error during analysis: {e}")
 
+        
     def _process_image(self, image_path: str):
 
         logger.info(f"Analyzing single image: {image_path}")
@@ -89,7 +91,7 @@ class EmotionAnalyzer:
             # 2. Inject source into the logic (Video)
             video = Video(source, self.detector, source_id)
             
-            results_generator = video.process(interval_seconds=self.input_data.interval)
+            results_generator = video.process(frame_step=self.input_data.interval)
             
             batch_buffer = []
             for result in results_generator:

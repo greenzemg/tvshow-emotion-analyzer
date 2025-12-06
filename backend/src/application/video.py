@@ -1,3 +1,4 @@
+from os import walk
 from typing import Generator
 
 from backend.src.application.analyzer import Frame
@@ -27,9 +28,13 @@ class Video:
         self.detector = detector
         self.source_id = source_id
 
-    def process(self, interval_seconds: int = 1) -> Generator[OutputData, None, None]:
+    def process(self, frame_step: int = 1) -> Generator[OutputData, None, None]:
         """
         Process for frame extraction and analysis.
+        Args:
+            frame_step: The step size for frame extraction.
+                        1 = Process every frame. 
+                          10 = Process every 10th frame.
         """
         if not self.source.open():
             logger.error(f"Could not open source: {self.source_id}")
@@ -41,20 +46,18 @@ class Video:
             self.source.release()
             return
 
-        # frame_interval = int(fps * interval_seconds)
-        frame_interval = max(1, interval_seconds)
+        step = max(1, frame_step)
         current_frame_idx = 0
         processed_count = 0
 
-        logger.info(f"Starting processing: {self.source_id} (FPS: {fps:.2f})")
-
+        logger.info(f"Starting processing: {self.source_id} (FPS: {fps:.2f}) Step: every {step} frames)")
         try:
             while True:
                 frame_data = self.source.read()
                 if frame_data is None:
                     break  # End of stream
 
-                if current_frame_idx % frame_interval == 0:
+                if current_frame_idx % step == 0:
                     # Inject detector into Frame
                     frame_obj = Frame(
                         image_data=frame_data,

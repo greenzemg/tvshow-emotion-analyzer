@@ -1,7 +1,7 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from abc import ABC, abstractmethod
 import numpy as np
-from backend.src.domain.models import OutputData
+from backend.src.domain.models import OutputData, VideoStats
 
 
 class IStorage(ABC):
@@ -15,6 +15,16 @@ class IStorage(ABC):
     @abstractmethod
     def write_batch(self, rows: list[OutputData]) -> None:
         """Writes a batch of data."""
+        pass
+
+    @abstractmethod
+    def load_all(self) -> List[Dict[str, Any]]:
+        """Reads all raw results from storage."""
+        pass
+
+    @abstractmethod
+    def save_stats(self, stats: List[VideoStats]) -> None:
+        """Saves the aggregated statistical report."""
         pass
 
 
