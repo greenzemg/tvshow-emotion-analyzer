@@ -15,6 +15,11 @@ venv/
 *.swp
 .DS_Store
 
+# Test related artifacts 
+.coverage
+htmlcov
+.pytest_cache
+
 # Personal  
 docs/PLAN.md
 docs/ACTIVITIES.md

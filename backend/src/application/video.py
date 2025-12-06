@@ -1,9 +1,8 @@
-from os import walk
 from typing import Generator
 
-from backend.src.application.analyzer import Frame
 from backend.src.domain.interfaces import IEmotionDetector, IVideoSource
 from backend.src.domain.models import OutputData
+from backend.src.application.frame import Frame
 from backend.src.infrastructure.logger import setup_logger
 
 logger = setup_logger("VideoProcessor")
