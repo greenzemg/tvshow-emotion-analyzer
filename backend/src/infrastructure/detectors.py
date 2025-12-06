@@ -1,4 +1,5 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+
 from deepface import DeepFace
 
 from backend.src.domain.interfaces import IEmotionDetector
@@ -10,7 +11,7 @@ logger = setup_logger("core.detectors.py")
 class DeepFaceEmotionDetector(IEmotionDetector):
     """Emotion detector implementation using the DeepFace library."""
 
-    def detect(self, frame: Any) -> Dict[str, Any]:
+    def detect(self, frame: Any) -> Optional[Dict[str, Any]]:
         """Analyzes a single frame using DeepFace.
 
         Args:
@@ -35,7 +36,7 @@ class DeepFaceEmotionDetector(IEmotionDetector):
             # Take the first face found
             first_face = results[0]
 
-            return first_face
+            return first_face  # type: ignore
 
         except ValueError:
             # Expected error when no face is found

@@ -46,6 +46,7 @@ def test_generate_report_multiple_videos(mock_storage):
     assert "videoA.mp4" in filenames
     assert "videoB.mp4" in filenames
 
+
 def test_stress_large_dataset(mock_storage):
     """
     STRESS TEST: Large Volume.
@@ -53,25 +54,26 @@ def test_stress_large_dataset(mock_storage):
     without crashing or calculation errors.
     """
     service = StatisticsService(mock_storage)
-    
+
     # Generate 10,000 frames (50% happy, 50% sad)
     # This ensures the logic scales beyond trivial examples
     large_batch = []
     for i in range(5000):
         large_batch.append(OutputData("long_video.mp4", "happy", {}, "00:00"))
         large_batch.append(OutputData("long_video.mp4", "sad", {}, "00:00"))
-    
+
     mock_storage.write_batch(large_batch)
-    
+
     service.generate_report()
-    
+
     assert len(mock_storage.saved_stats) == 1
     stats = mock_storage.saved_stats[0]
-    
+
     assert stats.total_frames == 10000
     # Floating point math should be reasonably close
     assert stats.emotion_distribution['happy'] == 50.0
     assert stats.emotion_distribution['sad'] == 50.0
+
 
 def test_stress_empty_storage(mock_storage):
     """
@@ -79,13 +81,14 @@ def test_stress_empty_storage(mock_storage):
     The service should not crash if the input CSV is empty or non-existent.
     """
     service = StatisticsService(mock_storage)
-    
+
     # Do not write any data to storage
     # Run Service
     service.generate_report()
-    
+
     # Should exit gracefully and produce no stats
     assert len(mock_storage.saved_stats) == 0
+
 
 def test_stress_corrupt_data_rows(mock_storage):
     """
@@ -94,21 +97,22 @@ def test_stress_corrupt_data_rows(mock_storage):
     (e.g., from a failed API call).
     """
     service = StatisticsService(mock_storage)
-    
+
     data = [
         OutputData("video1.mp4", "happy", {}, "00:00"),
         # Corrupt row: emotion is None or empty string
-        OutputData("video1.mp4", "", {}, "00:00"), 
-        OutputData("video1.mp4", None, {}, "00:00") 
+        OutputData("video1.mp4", "", {}, "00:00"),
+        OutputData("video1.mp4", None, {}, "00:00")
     ]
     mock_storage.write_batch(data)
-    
+
     service.generate_report()
-    
+
     stats = mock_storage.saved_stats[0]
     # Should only count the 1 valid row, ignoring the 2 corrupt ones
-    assert stats.total_frames == 1 
+    assert stats.total_frames == 1
     assert stats.most_frequent_emotion == "happy"
+
 
 def test_stress_tie_breaking(mock_storage):
     """
@@ -116,17 +120,14 @@ def test_stress_tie_breaking(mock_storage):
     Ensure deterministic behavior when two emotions have equal counts.
     """
     service = StatisticsService(mock_storage)
-    
-    data = [
-        OutputData("tie.mp4", "happy", {}, "00:00"),
-        OutputData("tie.mp4", "sad", {}, "00:00")
-    ]
+
+    data = [OutputData("tie.mp4", "happy", {}, "00:00"), OutputData("tie.mp4", "sad", {}, "00:00")]
     mock_storage.write_batch(data)
-    
+
     service.generate_report()
-    
+
     stats = mock_storage.saved_stats[0]
     assert stats.total_frames == 2
-    # Counter.most_common() preserves insertion order for ties, 
+    # Counter.most_common() preserves insertion order for ties,
     # so "happy" should win because it was added first.
     assert stats.most_frequent_emotion == "happy"

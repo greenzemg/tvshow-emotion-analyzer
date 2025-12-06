@@ -20,6 +20,9 @@ venv/
 htmlcov
 .pytest_cache
 
+# log
+log/
+
 # Personal  
 docs/PLAN.md
 docs/ACTIVITIES.md

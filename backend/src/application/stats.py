@@ -1,6 +1,7 @@
-from typing import List, Dict, Counter
-from backend.src.domain.models import VideoStats
+from typing import Counter, Dict, List
+
 from backend.src.domain.interfaces import IStorage
+from backend.src.domain.models import VideoStats
 from backend.src.infrastructure.logger import setup_logger
 
 logger = setup_logger("StatsService")
@@ -50,10 +51,7 @@ class StatisticsService:
             most_frequent = counts.most_common(1)[0][0]
 
             # Calculate percentages
-            distribution = {
-                emotion: round((count / total) * 100, 2)
-                for emotion, count in counts.items()
-            }
+            distribution = {emotion: round((count / total) * 100, 2) for emotion, count in counts.items()}
 
             stats = VideoStats(
                 file_name=filename,

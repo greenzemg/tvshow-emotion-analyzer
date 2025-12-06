@@ -1,8 +1,9 @@
 from typing import Generator
 
-from backend.src.domain.interfaces import IEmotionDetector, IVideoSource
-from backend.src.domain.models import OutputData
 from backend.src.application.frame import Frame
+from backend.src.domain.interfaces import IEmotionDetector
+from backend.src.domain.interfaces import IVideoSource
+from backend.src.domain.models import OutputData
 from backend.src.infrastructure.logger import setup_logger
 
 logger = setup_logger("VideoProcessor")
@@ -14,9 +15,7 @@ class Video:
     It models the real world video item with added behavior
     """
 
-    def __init__(
-        self, source: IVideoSource, detector: IEmotionDetector, source_id: str
-    ):
+    def __init__(self, source: IVideoSource, detector: IEmotionDetector, source_id: str):
         """
         Args:
             source: The interface to read frames.
@@ -32,7 +31,7 @@ class Video:
         Process for frame extraction and analysis.
         Args:
             frame_step: The step size for frame extraction.
-                        1 = Process every frame. 
+                        1 = Process every frame.
                           10 = Process every 10th frame.
         """
         if not self.source.open():
@@ -78,9 +77,7 @@ class Video:
                 current_frame_idx += 1
         finally:
             self.source.release()
-            logger.info(
-                f"Finished {self.source_id}. Total detections: {processed_count}"
-            )
+            logger.info(f"Finished {self.source_id}. Total detections: {processed_count}")
 
     def _frame_to_time(self, frame_idx: int, fps: float) -> str:
         seconds = int(frame_idx / fps)

@@ -1,8 +1,13 @@
-from typing import Optional, Dict, Any, List
-import pytest
+from typing import Any, Dict, List, Optional
+
 import numpy as np
-from backend.src.domain.interfaces import IVideoSource, IStorage, IEmotionDetector
-from backend.src.domain.models import OutputData, VideoStats
+import pytest
+
+from backend.src.domain.interfaces import IEmotionDetector
+from backend.src.domain.interfaces import IStorage
+from backend.src.domain.interfaces import IVideoSource
+from backend.src.domain.models import OutputData
+from backend.src.domain.models import VideoStats
 
 
 # -------------------------------------------
@@ -18,17 +23,17 @@ class MockVideoSource(IVideoSource):
         self.is_opened = True
 
     def open(self) -> bool:
-        return self.is_opened
+        return self.is_opened  # type: ignore
 
     def get_fps(self) -> float:
-        return self._fps
+        return self._fps  # type: ignore
 
     def read(self) -> Optional[np.ndarray]:
         if self.current_idx >= self.num_frames:
             return None
         self.current_idx += 1
         # Return a fake black 100x100 image
-        return np.zeros((100, 100, 3), dtype=np.uint8)
+        return np.zeros((100, 100, 3), dtype=np.uint8)  # type: ignore
 
     def release(self) -> None:
         self.is_opened = False
@@ -49,14 +54,11 @@ class MockStorage(IStorage):
 
     def load_all(self) -> List[Dict[str, Any]]:
         # Convert objects back to dicts to simulate reading from CSV
-        return [
-            {
-                "file_name": d.file_name,
-                "dominant_emotion": d.dominant_emotion,
-                "timestamp": d.timestamp,
-            }
-            for d in self.saved_data
-        ]
+        return [{
+            "file_name": d.file_name,
+            "dominant_emotion": d.dominant_emotion,
+            "timestamp": d.timestamp,
+        } for d in self.saved_data]
 
     def save_stats(self, stats: List[VideoStats]) -> None:
         self.saved_stats.extend(stats)
@@ -72,7 +74,9 @@ class MockEmotionDetector(IEmotionDetector):
         # Always return the fixed emotion with 100% confidence
         return {
             "dominant_emotion": self.fixed_emotion,
-            "emotion": {self.fixed_emotion: 100.0},
+            "emotion": {
+                self.fixed_emotion: 100.0
+            },
         }
 
 
