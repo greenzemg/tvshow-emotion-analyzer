@@ -1,0 +1,9 @@
+# Pytest tools
+pytest 
+pytest-mock 
+pytest-cov
+
+# TODO: Code Quality 
+# black
+# flake8
+# mypy
