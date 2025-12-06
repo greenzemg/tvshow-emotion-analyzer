@@ -3,7 +3,11 @@ pytest
 pytest-mock 
 pytest-cov
 
-# TODO: Code Quality 
-# black
-# flake8
-# mypy
+# Formatting & Imports
+# black # black is not flexible like yapf.
+yapf
+isort
+
+# Linting & Type Checking
+flake8
+mypy
