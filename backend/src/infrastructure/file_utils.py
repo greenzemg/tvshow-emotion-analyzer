@@ -5,7 +5,9 @@ from backend.src.infrastructure.logger import setup_logger
 
 logger = setup_logger("core.analyzer.py")
 
+
 class FileUtils:
+
     @staticmethod
     def get_possible_dirs():
         """
@@ -28,7 +30,7 @@ class FileUtils:
         video_extensions = {'.mp4', '.avi', '.mov', '.mkv', '.wmv'}
         video_files = []
 
-        logger.info(f"Getting video from folder")
+        logger.info(f"Getting video from folder {directory}")
 
         if not os.path.exists(directory):
             raise FileNotFoundError(f"Input directory not found: {directory}")
@@ -42,4 +44,3 @@ class FileUtils:
         logger.debug(f"video files {video_files}")
 
         return video_files
-        

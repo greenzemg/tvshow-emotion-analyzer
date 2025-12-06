@@ -1,10 +1,11 @@
-from typing import Any, Dict, List
 import csv
 import os
+from typing import Any, Dict, List
 
-from backend.src.infrastructure.logger import setup_logger
-from backend.src.domain.models import OutputData, VideoStats
 from backend.src.domain.interfaces import IStorage
+from backend.src.domain.models import OutputData
+from backend.src.domain.models import VideoStats
+from backend.src.infrastructure.logger import setup_logger
 
 logger = setup_logger("CSVStorage")
 
@@ -15,22 +16,22 @@ class CSVStorage(IStorage):
     def __init__(self, output_path: str):
         """Initializes storage with output directory."""
         self.output_path = output_path
-        
+
         # Check if directory exists
         if not os.path.exists(self.output_path):
             os.makedirs(self.output_path, exist_ok=True)
-            
+
         self.raw_csv_path = os.path.join(self.output_path, "analysis_results.csv")
         self.stats_csv_path = os.path.join(self.output_path, "summary_report.csv")
 
         self.fieldnames = [
-            'file_name', 'timestamp', 'dominant_emotion', 
-            'angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral'
+            'file_name', 'timestamp', 'dominant_emotion', 'angry', 'disgust', 'fear', 'happy', 'sad', 'surprise',
+            'neutral'
         ]
 
         self.stats_fieldnames = [
-            "file_name", "total_frames", "most_frequent_emotion",
-            "pct_happy", "pct_sad", "pct_angry", "pct_neutral", "pct_fear", "pct_surprise", "pct_disgust"
+            "file_name", "total_frames", "most_frequent_emotion", "pct_happy", "pct_sad", "pct_angry", "pct_neutral",
+            "pct_fear", "pct_surprise", "pct_disgust"
         ]
 
     def save(self, data: OutputData):
@@ -55,7 +56,7 @@ class CSVStorage(IStorage):
         if not os.path.exists(self.raw_csv_path):
             logger.warning("No analysis results found to load.")
             return []
-            
+
         data = []
         try:
             with open(self.raw_csv_path, mode="r", encoding="utf-8") as csvfile:
@@ -72,7 +73,7 @@ class CSVStorage(IStorage):
             with open(self.stats_csv_path, mode="w", newline="", encoding="utf-8") as csvfile:
                 writer = csv.DictWriter(csvfile, fieldnames=self.stats_fieldnames)
                 writer.writeheader()
-                
+
                 for stat in stats_list:
                     # Flatten the dictionary for CSV
                     row = {
@@ -105,7 +106,7 @@ class CSVStorage(IStorage):
             "surprise": data.emotion.get("surprise", 0),
             "neutral": data.emotion.get("neutral", 0),
         }
-        
+
     def _write_to_file(self, row: dict):
         """Writes a dictionary row to the CSV file."""
         file_exists = os.path.isfile(self.raw_csv_path)
@@ -118,7 +119,7 @@ class CSVStorage(IStorage):
         except Exception as e:
             logger.error(f"Error writing to CSV: {e}")
 
-    def write_batch(self, rows: List[Dict]):
+    def write_batch(self, rows: List[OutputData]) -> None:
         """Writes a list of rows to the CSV."""
         for row in rows:
             self.save(row)

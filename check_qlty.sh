@@ -12,7 +12,7 @@ echo -e "\n${GREEN}[1/4] Running isort (Import Sorter)...${NC}"
 # --atomic prevents isort from saving broken code if it crashes
 isort backend/ --atomic
 if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ isort failed.${NC}"
+    echo -e "${RED} isort failed.${NC}"
     exit 1
 fi
 
@@ -23,7 +23,7 @@ echo -e "\n${GREEN}[2/4] Running YAPF (Formatter)...${NC}"
 # -p: parallel processing (faster)
 yapf -i -r -p backend/
 if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ YAPF failed to format code.${NC}"
+    echo -e "${RED} YAPF failed to format code.${NC}"
     exit 1
 fi
 
@@ -31,7 +31,7 @@ fi
 echo -e "\n${GREEN}[3/4] Running Flake8 (Linter)...${NC}"
 flake8 backend/
 if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ Flake8 failed. Please fix style errors.${NC}"
+    echo -e "${RED} Flake8 failed. Please fix style errors.${NC}"
     exit 1
 fi
 
@@ -39,9 +39,9 @@ fi
 echo -e "\n${GREEN}[4/4] Running Mypy (Type Checker)...${NC}"
 mypy backend/
 if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ Mypy failed. Please fix type errors.${NC}"
+    echo -e "${RED} Mypy failed. Please fix type errors.${NC}"
     exit 1
 fi
 
-echo -e "\n${GREEN}✅ SUCCESS! All checks passed. You are ready to commit.${NC}"
+echo -e "\n${GREEN} SUCCESS! All checks passed. You are ready to commit.${NC}"
 exit 0

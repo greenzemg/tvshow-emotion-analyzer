@@ -2,14 +2,15 @@ import argparse
 
 from backend.src.application.analyzer import EmotionAnalyzer
 from backend.src.application.stats import StatisticsService
-from backend.src.infrastructure.logger import setup_logger
 from backend.src.domain.models import InputData
 from backend.src.infrastructure.detectors import DeepFaceEmotionDetector
-from backend.src.infrastructure.storage import CSVStorage
+from backend.src.infrastructure.logger import setup_logger
 from backend.src.infrastructure.opencv_adapter import OpenCVVideoFactory
+from backend.src.infrastructure.storage import CSVStorage
 
 # TODO: Change the hard-coded name to dynamic if possible
 logger = setup_logger("cli.py")
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Emotion Recognition Tool for Talk Show Analysis")
@@ -20,6 +21,7 @@ def parse_arguments():
     parser.add_argument('--no-report', action='store_true', help="Skip generation of summary report")
     return parser.parse_args()
 
+
 def confirm_file_naming_convention():
     """
     Displays a visual guide for file naming and enforces user confirmation.
@@ -28,7 +30,6 @@ def confirm_file_naming_convention():
     +-------------------------------------------------------+
     |             Naming Convention of Video Files          |
     +-------------------------------------------------------+
-    
     /data/input/{GuestName}/
     ├── GuestName_HostName_Topic.mp4
     ├── MarkRutte_MariekeElsinga_MSC.mkv
@@ -37,12 +38,12 @@ def confirm_file_naming_convention():
     Format: Guest_Host_Topic.mp4
     """
     print(visual_guide)
-    
+
     confirmation = input("Have you named your files accordingly? (y/n): ")
     if confirmation.lower() != 'y':
         logger.error("Please rename your files before proceeding.")
         exit(1)
-        
+
 
 def main():
     args = parse_arguments()
@@ -72,8 +73,8 @@ def main():
     if not input_data.image_path and not input_data.video_path:
         logger.error("You must provide either --image or --video input.")
         return
-   
-    # 3. Start excution of the pipelines 
+
+    # 3. Start excution of the pipelines
     #                      +------------------------------+
     #  Video/Image --->    | Pipeline-1: Emotion Analysis | ---> Analysis Results
     #                      +------------------------------+
@@ -84,7 +85,7 @@ def main():
     #  Analysis Result ---> | Pipeline-2: Report Generation | --->  Statistical Report
     #                       +-------------------------------+
     if not args.no_report and args.video:
-        stats_service.generate_report() 
+        stats_service.generate_report()
 
 
 if __name__ == "__main__":

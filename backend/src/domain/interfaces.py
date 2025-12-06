@@ -1,7 +1,11 @@
-from typing import Dict, Any, Optional, List
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
+from typing import Any, Dict, List, Optional
+
 import numpy as np
-from backend.src.domain.models import OutputData, VideoStats
+
+from backend.src.domain.models import OutputData
+from backend.src.domain.models import VideoStats
 
 
 class IStorage(ABC):
@@ -39,10 +43,12 @@ class IEmotionDetector(ABC):
         """
         pass
 
+
 class IVideoSource(ABC):
     """
     Abstract interface for reading frames from a video source.
     """
+
     @abstractmethod
     def open(self) -> bool:
         """Prepares the video source for reading."""
@@ -63,8 +69,10 @@ class IVideoSource(ABC):
         """Releases resources."""
         pass
 
+
 class IVideoFactory(ABC):
     """Factory interface to create video sources from paths."""
+
     @abstractmethod
     def create(self, file_path: str) -> IVideoSource:
         pass

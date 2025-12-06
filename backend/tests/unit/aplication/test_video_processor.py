@@ -1,5 +1,6 @@
 from backend.src.application.video import Video
-from backend.tests.conftest import MockVideoSource, MockEmotionDetector
+from backend.tests.conftest import MockEmotionDetector
+from backend.tests.conftest import MockVideoSource
 
 
 def test_process_every_frame():
@@ -40,6 +41,7 @@ def test_handles_empty_video():
     results = list(video.process(frame_step=1))
     assert len(results) == 0
 
+
 def test_stress_large_video_stream():
     """
     STRESS TEST: Large Volume.
@@ -56,7 +58,8 @@ def test_stress_large_video_stream():
 
     # Expect 100 results (0, 100, 200, ..., 9900)
     assert len(results) == 100
-    assert results[-1].timestamp == "05:30" # 9900/30 = 330s = 5m 30s
+    assert results[-1].timestamp == "05:30"  # 9900/30 = 330s = 5m 30s
+
 
 def test_stress_invalid_fps():
     """
@@ -72,6 +75,7 @@ def test_stress_invalid_fps():
     results = list(video.process(frame_step=1))
     assert len(results) == 0
 
+
 def test_stress_negative_stride():
     """
     STRESS TEST: Robustness (Input Validation).
@@ -85,6 +89,7 @@ def test_stress_negative_stride():
     results = list(video.process(frame_step=-5))
     assert len(results) == 5
 
+
 def test_stress_stride_larger_than_video():
     """
     STRESS TEST: Edge Case.
@@ -96,7 +101,7 @@ def test_stress_stride_larger_than_video():
     video = Video(source, detector, "short.mp4")
 
     results = list(video.process(frame_step=100))
-    
+
     # 0 % 100 == 0 -> Process
     # Next check is 100, which is > 9 -> Stop
     assert len(results) == 1

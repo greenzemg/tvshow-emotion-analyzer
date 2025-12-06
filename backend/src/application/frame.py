@@ -1,9 +1,11 @@
 import os
+from typing import Optional
+
 import numpy as np
 
-from backend.src.infrastructure.detectors import DeepFaceEmotionDetector
-from backend.src.infrastructure.logger import setup_logger
+from backend.src.domain.interfaces import IEmotionDetector
 from backend.src.domain.models import OutputData
+from backend.src.infrastructure.logger import setup_logger
 
 # Configure local logger
 logger = setup_logger("core.frame.py")
@@ -21,10 +23,10 @@ class Frame:
 
     def __init__(
         self,
-        image_path: str = None,
-        image_data: np.ndarray = None,
-        source_id: str = None,
-        emotion_detector: DeepFaceEmotionDetector = DeepFaceEmotionDetector(),
+        emotion_detector: IEmotionDetector,
+        image_path: Optional[str] = None,
+        image_data: Optional[np.ndarray] = None,
+        source_id: Optional[str] = None,
     ):
         """Initialize a Frame instance.
 
@@ -43,9 +45,7 @@ class Frame:
         self.emotion_detector = emotion_detector
 
         if not self.image_path and self.image_data is None:
-            raise ValueError(
-                "Frame must be initialized with either image_path or image_data"
-            )
+            raise ValueError("Frame must be initialized with either image_path or image_data")
 
     def analyze(self):
         """Analyzes the frame for emotion.
@@ -59,9 +59,7 @@ class Frame:
         try:
             logger.debug(f"Analyzing frame: {source_name}")
 
-            file_name = (
-                os.path.basename(source_name) if self.image_path else self.source_id
-            )
+            file_name = (os.path.basename(source_name) if self.image_path else self.source_id)
             results = self.emotion_detector.detect(target)
 
             if results is None:
