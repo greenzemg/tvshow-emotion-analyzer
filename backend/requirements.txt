@@ -10,3 +10,9 @@ deepface
 tf-keras 
 tensorflow
 
+# Web UI
+# streamlit
+plotly
+solara
+anywidget
+

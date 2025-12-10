@@ -1,2 +1,3 @@
 file_name,total_frames,most_frequent_emotion,pct_happy,pct_sad,pct_angry,pct_neutral,pct_fear,pct_surprise,pct_disgust
-MarkRutte_MariekeElsinga.mkv,7,neutral,28.57,14.29,0,42.86,14.29,0,0
+MarkRutte_MariekeElsinga.mkv,132,neutral,24.24,21.21,6.82,33.33,14.39,0,0
+MarkRutte_MatthijsNieuwkerk.mp4,235,sad,3.4,32.77,27.66,13.62,18.3,3.83,0.43
