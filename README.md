@@ -246,3 +246,8 @@ I didn't face challenge in selecting technologies as the requirements were clear
 - The benefit of code quality tools in maintaining a clean codebase
 - Simplicity is the ultimate sophistication.
 
+### The tool in action screenshots
+<div style="text-align: center;">
+  <img src="docs/images/screenshot1.png" width="600" alt="Resized image">
+  <img src="docs/images/screenshot2.png" width="600" alt="Resized image">
+</div>
