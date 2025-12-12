@@ -1,0 +1,84 @@
+# ==========================================
+# Git - Not needed in production image
+# ==========================================
+.git
+.gitignore
+.github
+
+# ==========================================
+# Python artifacts - Reinstalled in container
+# ==========================================
+__pycache__
+*.py[cod]
+*.pyo
+.venv
+venv
+.pytest_cache
+.mypy_cache
+*.egg-info
+
+# ==========================================
+# Data folders - Mounted as volumes instead
+# ==========================================
+data/
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# ==========================================
+# IDE/Editor files - Developer-only
+# ==========================================
+.vscode
+.idea
+*.swp
+.DS_Store
+
+# ==========================================
+# Secrets - NEVER include in images
+# ==========================================
+.env
+.env.*
+*.pem
+*.key
+
+# ==========================================
+# Documentation - Not needed at runtime
+# ==========================================
+docs/
+*.md
+!README.md
+
+# ==========================================
+# Test files - Not needed in production
+# ==========================================
+tests/
+*_test.py
+test_*
+htmlcov
+.coverage
+pytest.txt
+
+# ==========================================
+# Linting config files - Not needed at runtime
+# ==========================================
+.flake8
+.pylintrc
+pyproject.toml
+
+# ==========================================
+# Dev scripts - Not needed in container
+# ==========================================
+check_qlty.ps1
+check_qlty.sh
+
+# ==========================================
+# DeepFace cache - Downloaded at runtime
+# ==========================================
+.deepface
+facial_expre*
+
+# ==========================================
+# Logs & Misc
+# ==========================================
+log

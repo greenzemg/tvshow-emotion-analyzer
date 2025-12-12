@@ -17,7 +17,7 @@ from backend.src.infrastructure.opencv_adapter import OpenCVVideoFactory
 # Configuration
 input_path = solara.reactive("./data/input")
 output_path = solara.reactive("./data/output")
-frame_stride = solara.reactive(10)
+frame_stride = solara.reactive(25)
 detector_model = solara.reactive("DeepFace")
 
 # Execution Status

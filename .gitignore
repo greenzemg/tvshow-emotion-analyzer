@@ -28,3 +28,6 @@ docs/PLAN.md
 docs/ACTIVITIES.md
 docs/MANUAL.md
 docs/CHANGELOG.md
+
+# Docker Related
+.mypy_cache
