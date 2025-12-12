@@ -70,7 +70,7 @@ class MockEmotionDetector(IEmotionDetector):
     def __init__(self, fixed_emotion="happy"):
         self.fixed_emotion = fixed_emotion
 
-    def detect(self, image: Any) -> Optional[Dict[str, Any]]:
+    def detect(self, image: Any, reference_embedding: Optional[List[float]] = None) -> Optional[Dict[str, Any]]:
         # Always return the fixed emotion with 100% confidence
         return {
             "dominant_emotion": self.fixed_emotion,
@@ -78,6 +78,14 @@ class MockEmotionDetector(IEmotionDetector):
                 self.fixed_emotion: 100.0
             },
         }
+
+    def generate_embedding(self, image: Any) -> Optional[List[float]]:
+        """Return a mock embedding vector."""
+        return [0.0] * 128  # Fake 128-dim embedding
+
+    def verify(self, embedding1: List[float], embedding2: List[float]) -> bool:
+        """Always return True for mock verification."""
+        return True
 
 
 # -------------------------------------------
