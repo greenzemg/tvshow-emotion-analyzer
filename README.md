@@ -36,6 +36,17 @@ Well, the solution to the above problem is to build an automation tool that can 
 ### Prerequisites
 Make sure Docker Desktop is installed and running.
 
+Please make sure the video files you want to analyze are named based on the following convention:
+`<GuestName>_<ShowName>.mp4`
+
+Example:
+```
+/data/input/{GuestName}/
+    ├── GuestName_HostName.mp4
+    ├── MarkRutte_MariekeElsinga_MSC.mkv
+    └── MarkRutte_MatthijsNieuwkerk.mp4
+```
+
 ### Option 1: `run.sh` Script (Pre-built image from Docker Hub)
 1. First download the `run.sh` script from the repository, then run: 
 ```bash
@@ -206,7 +217,7 @@ This section details the design choices and technology choices made during the d
 I didn't face challenge in selecting technologies as the requirements were clear. However, I made few choices based on my prior experience and research. 
 - **Pytest For Testing**: Exprienced in using pytest for unit testing in previous projects. Pytest offers a simple syntax, fixtures, easy of mocking external dependencies. 
 
-- **Solara for Web UI**: I didn't have experience with Solara before. I did some research and found first Streamlit. However, I didn't find Streamlit flexible enough fto adjustlayout. Then did more search and found Solara. Few things I liked about Solara are: Component-Based, Reactive State Management, FastAPI Integration, and Python-Native (I can call Python code directly).
+- **Solara for Web UI**: I didn't have experience with Solara before. I did some research and found first Streamlit. However, I didn't find Streamlit flexible enough to adjust layout. Then did more search and found Solara. Few things I liked about Solara are: Component-Based, Reactive State Management, FastAPI Integration, and Python-Native (I can call Python code directly).
 
 
 ### Challenges Faced
