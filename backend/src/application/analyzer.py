@@ -37,10 +37,24 @@ class EmotionAnalyzer:
         self.detector = detector
         self.storage = storage
         self.video_factory = video_factory
+        self.guest_embedding = None
 
     def run(self):
         """Executes the analysis workflow for images or videos."""
         logger.info(f"Starting analysis on {self.input_data.video_path}")
+
+        # 1. Pre-calculate Guest Embedding (Optimization)
+        if self.input_data.guest_reference_path:
+            if os.path.exists(self.input_data.guest_reference_path):
+                logger.info(f"Targeting Guest: {self.input_data.guest_reference_path}")
+                self.guest_embedding = self.detector.generate_embedding(self.input_data.guest_reference_path)
+
+                if self.guest_embedding:
+                    logger.info("Guest embedding generated successfully.")
+                else:
+                    logger.error("Failed to generate guest embedding. Proceeding without filter.")
+            else:
+                logger.error(f"Guest reference file not found: {self.input_data.guest_reference_path}")
 
         try:
             if self.input_data.image_path:
@@ -89,7 +103,7 @@ class EmotionAnalyzer:
             source_id = os.path.basename(video_path)
 
             # 2. Inject source into the logic (Video)
-            video = Video(source, self.detector, source_id)
+            video = Video(source, self.detector, source_id, guest_embedding=self.guest_embedding)
 
             results_generator = video.process(frame_step=self.input_data.interval)
 

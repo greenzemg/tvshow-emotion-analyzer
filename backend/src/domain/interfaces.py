@@ -36,10 +36,26 @@ class IEmotionDetector(ABC):
     """Abstract interface for emotion detection strategies."""
 
     @abstractmethod
-    def detect(self, frame: Any) -> Optional[Dict[str, Any]]:
+    def detect(self, frame: Any, reference_embedding: Optional[List[float]] = None) -> Optional[Dict[str, Any]]:
         """
         Detects emotion in a given image (path or numpy array).
         Returns raw result dictionary or None.
+        """
+        pass
+
+    @abstractmethod
+    def generate_embedding(self, image_path: str) -> Any:
+        """
+        Calculates the facial embedding (vector) for a reference image.
+        This is expensive and should be done once per job.
+        """
+        pass
+
+    @abstractmethod
+    def verify(self, face_image: Any, reference_embedding: Any) -> bool:
+        """
+        Checks if the provided face image matches the reference embedding.
+        Returns True if it is the same person.
         """
         pass
 

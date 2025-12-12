@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Generator, List, Optional
 
 from backend.src.application.frame import Frame
 from backend.src.domain.interfaces import IEmotionDetector
@@ -15,7 +15,13 @@ class Video:
     It models the real world video item with added behavior
     """
 
-    def __init__(self, source: IVideoSource, detector: IEmotionDetector, source_id: str):
+    def __init__(
+        self,
+        source: IVideoSource,
+        detector: IEmotionDetector,
+        source_id: str,
+        guest_embedding: Optional[List[float]] = None,
+    ):
         """
         Args:
             source: The interface to read frames.
@@ -25,6 +31,7 @@ class Video:
         self.source = source
         self.detector = detector
         self.source_id = source_id
+        self.guest_embedding = guest_embedding
 
     def process(self, frame_step: int = 1) -> Generator[OutputData, None, None]:
         """

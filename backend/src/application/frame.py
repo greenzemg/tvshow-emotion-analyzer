@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import List, Optional
 
 import numpy as np
 
@@ -18,7 +18,8 @@ class Frame:
         image_path (str): Path to image file.
         image_data (np.ndarray): Raw image data.
         source_id (str): Identifier for the frame source.
-        emotion_detector (DeepFaceEmotionDetector): Emotion detection service.
+        emotion_detector (IEmotionDetector): Emotion detection service.
+        guest_embedding (List[float], optional): Embedding vector for guest verification.
     """
 
     def __init__(
@@ -27,6 +28,7 @@ class Frame:
         image_path: Optional[str] = None,
         image_data: Optional[np.ndarray] = None,
         source_id: Optional[str] = None,
+        guest_embedding: Optional[List[float]] = None,
     ):
         """Initialize a Frame instance.
 
@@ -43,6 +45,7 @@ class Frame:
         self.image_data = image_data
         self.source_id = source_id
         self.emotion_detector = emotion_detector
+        self.guest_embedding = guest_embedding
 
         if not self.image_path and self.image_data is None:
             raise ValueError("Frame must be initialized with either image_path or image_data")
@@ -60,7 +63,7 @@ class Frame:
             logger.debug(f"Analyzing frame: {source_name}")
 
             file_name = (os.path.basename(source_name) if self.image_path else self.source_id)
-            results = self.emotion_detector.detect(target)
+            results = self.emotion_detector.detect(target, reference_embedding=self.guest_embedding)
 
             if results is None:
                 logger.warning(f"No face detected in frame: {source_name}")

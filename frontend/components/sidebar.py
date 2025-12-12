@@ -20,6 +20,7 @@ def ConfigSidebar():
     # Local error state for validation visual feedback
     input_error = solara.use_reactive("")
     output_error = solara.use_reactive("")
+    guest_error = solara.use_reactive("")
 
     # Refresh trigger state
     refresh_counter = solara.use_reactive(0)
@@ -27,10 +28,13 @@ def ConfigSidebar():
     # Validation Logic 
     input_path_val = state.input_path.value
     output_path_val = state.output_path.value
+    guest_path_val = state.guest_reference_path.value
 
     # Check existence
     input_exists = os.path.isdir(input_path_val) and os.path.exists(input_path_val)
     output_exists = os.path.isdir(output_path_val) and os.path.exists(output_path_val)
+    # Guest path is valid if empty (optional) OR if it points to a real file
+    guest_exists = (not guest_path_val) or os.path.isfile(guest_path_val)
 
     # Sync errors
     if not input_exists and input_path_val:
@@ -42,6 +46,11 @@ def ConfigSidebar():
         output_error.value = "Folder not found"
     else:
         output_error.value = ""
+        
+    if not guest_exists:
+        guest_error.value = "File not found"
+    else:
+        guest_error.value = ""
 
     # Fetch Files
     # Dependency on refresh_counter ensures re-execution
@@ -152,7 +161,36 @@ def ConfigSidebar():
         solara.Markdown("---")
 
         # ==========================================
-        # SECTION 3: Parameters
+        # SECTION 3: Guest Targeting
+        # ==========================================
+        solara.Text("Guest Reference Image", style={"font-weight": "bold", "font-size": "1.1em"})
+        
+        solara.InputText(
+            label="Path to Guest Photo (e.g. guest.jpg)",
+            value=state.guest_reference_path,
+            on_value=state.update_guest_reference_path,
+            error=bool(guest_error.value),
+            message=guest_error.value if guest_error.value else ""
+        )
+
+        # New Image Preview Feature
+        if guest_path_val and os.path.isfile(guest_path_val):
+            try:
+                # Read image as binary
+                with open(guest_path_val, "rb") as f:
+                    image_data = f.read()
+                
+                with solara.Row(justify="center", style={"margin-top": "2px"}):
+                    solara.Image(image_data, width="100px")
+            except Exception:
+                # If reading fails or it's not a valid image, we simply don't show the preview
+                # or could show a placeholder
+                pass
+
+        solara.Markdown("---")
+        
+        # ==========================================
+        # SECTION 4: Parameters
         # ==========================================
         solara.Text("PARAMETERS", style={"font-weight": "bold", "font-size": "1.1em"})
 
@@ -176,7 +214,7 @@ def ConfigSidebar():
         solara.Markdown("---")
 
         # ==========================================
-        # SECTION 4: Actions
+        # SECTION 5: Actions
         # ==========================================
         run_disabled = (not input_exists) or state.is_processing.value
 

@@ -17,6 +17,7 @@ from backend.src.infrastructure.opencv_adapter import OpenCVVideoFactory
 # Configuration
 input_path = solara.reactive("./data/input")
 output_path = solara.reactive("./data/output")
+guest_reference_path = solara.reactive("")
 frame_stride = solara.reactive(25)
 detector_model = solara.reactive("DeepFace")
 
@@ -40,10 +41,15 @@ def update_output_path(value):
     output_path.value = value
 
 
+def update_guest_reference_path(value):
+    guest_reference_path.value = value
+
+
 def reset_settings():
-    frame_stride.value = 10
     input_path.value = "./data/inputs"
     output_path.value = "./data/outputs"
+    guest_reference_path.value = ""
+    frame_stride.value = 25 
 
 
 def add_log(message: str):
@@ -69,10 +75,17 @@ def _run_job():
         video_factory = OpenCVVideoFactory()
         stats_service = StatisticsService(storage)
 
+        # Validate Guest Path
+        guest_path = guest_reference_path.value
+        if guest_path and not os.path.isfile(guest_path):
+            logging.warning(f"Guest reference file not found: {guest_path}. Proceeding without filter.")
+            guest_path = None
+            
         input_data = InputData(
             video_path=input_path.value,
             output_path=output_path.value,
             interval=frame_stride.value,
+            guest_image_path=guest_path
         )
 
         # 2. Run Analyzer

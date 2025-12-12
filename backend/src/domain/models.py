@@ -12,6 +12,7 @@ class InputData:
     video_path: Optional[str] = None
     output_path: str = "./data/output"
     interval: int = 1  # Prcess every nth frame in videos
+    guest_image_path: Optional[str] = None  # If provided, only faces matching this person will be processed.
 
 
 @dataclass
