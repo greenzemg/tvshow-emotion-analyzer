@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  emovision:
+    build: .
+    container_name: emovision_app
+    ports:
+      - "8765:8765"
+    volumes:
+      - ./data:/app/data
+      # Mount .deepface folder to persist downloaded weights on host
+      - ./.deepface:/root/.deepface
+    restart: unless-stopped
